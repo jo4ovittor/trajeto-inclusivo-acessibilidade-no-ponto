@@ -161,36 +161,44 @@ function startVoiceRecognition() {
 window.addEventListener("load", () => {
   renderSchedules();
 
-  window.currentSpeech = null;
-  function speakMessageControlled(message) {
-    if (window.currentSpeech) speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(message);
-    utterance.lang = "pt-BR";
-    window.currentSpeech = utterance;
-    speechSynthesis.speak(utterance);
-    return utterance;
-  }
-
-  setTimeout(() => {
-    window.currentSpeech = speakMessageControlled(
-      "Bem vindo ao trajeto inclusivo. Clique na tela para ativar o áudio e diga o número ou o nome da linha que deseja."
-    );
-  }, 1000);
-
   const overlay = document.getElementById("voiceOverlay");
   overlay.style.display = "flex";
 
+  let audioEnabled = false;
+  let hasSpokenWelcome = false;
+
+  function speakOnce(message) {
+    if (!audioEnabled || hasSpokenWelcome) return;
+    hasSpokenWelcome = true;
+    const utterance = new SpeechSynthesisUtterance(message);
+    utterance.lang = "pt-BR";
+    speechSynthesis.speak(utterance);
+  }
+
+  // 🔊 Primeiro toque do usuário libera o áudio
   overlay.addEventListener("click", () => {
+    if (!audioEnabled) {
+      audioEnabled = true;
+      speakOnce(
+        "Bem vindo ao trajeto inclusivo. Clique novamente para ativar o áudio e diga o número ou o nome da linha que deseja."
+      );
+      return; // Primeiro toque apenas desbloqueia áudio e fala a introdução
+    }
+
+    // Segundo toque: inicia a escuta
     if (speechSynthesis.speaking) speechSynthesis.cancel();
     startVoiceRecognition();
     window.hasActivatedVoice = true;
   });
 
+  // Segunda fala após 20s se ainda não interagiu
   setTimeout(() => {
-    if (!window.hasActivatedVoice) {
-      speakMessageControlled(
+    if (!window.hasActivatedVoice && audioEnabled && !speechSynthesis.speaking) {
+      const msg = new SpeechSynthesisUtterance(
         "Clique na tela e diga o número ou o nome da linha que deseja."
       );
+      msg.lang = "pt-BR";
+      speechSynthesis.speak(msg);
     }
   }, 20000);
 });
