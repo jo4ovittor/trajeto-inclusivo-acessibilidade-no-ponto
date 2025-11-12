@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trajeto Inclusivo</title>
+  <link rel="stylesheet" href="src/css/styles.css" />
+  <link rel="shortcut icon" href="src/img/bus-location.png" type="image/x-icon" />
+</head>
+<body>
+  <!-- Tela inicial de voz -->
+  <div id="voiceOverlay" class="overlay">
+    <div class="overlay-content">
+      <h1>Trajeto Inclusivo</h1>
+      <p>Diga o número ou nome da linha que deseja.</p>
+      <button id="startVoiceBtn" class="start-voice-btn">🎤 Iniciar reconhecimento</button>
+    </div>
+  </div>
+
+  <header>
+    <h1>Linhas de Ônibus</h1>
+    <p>Consulte rapidamente o próximo horário da sua linha</p>
+  </header>
+
+  <main class="container">
+    <div class="search-box">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Buscar por número ou nome da linha"
+      />
+    </div>
+
+    <div id="scheduleList" class="schedule-list"></div>
+  </main>
+
+  <footer>
+    <p>Projeto Integrador - UNIVESP 2025</p>
+    <p>Celso Lino - Cesar Costa - Cesar Romanholi - João Vitor - Nayara Rosa</p>
+    <p>Atualizado em: <span id="updateDate"></span></p>
+  </footer>
+
+  <script src="src/js/index.js"></script>
+</body>
+</html>
